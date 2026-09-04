@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Lern with 3 Point Traders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --bg-alt:#101A2C;
+    --card:#131F35;
+    --line:#22314B;
+    --gold:#D4AF6A;
+    --gold-bright:#F0C878;
+    --green:#2FBF71;
+    --red:#E5484D;
+    --text:#EDEFF3;
+    --muted:#8B93A7;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  .ta{font-family:'Noto Sans Tamil','IBM Plex Sans',sans-serif;}
+  .en{font-family:'Poppins',sans-serif;}
+  img{max-width:100%; display:block;}
+  a{text-decoration:none; color:inherit;}
+
+  /* ---------- Page ---------- */
+  #page{max-width:480px; margin:0 auto; position:relative;}
+
+  /* Candlestick signature background */
+  .wickField{position:absolute; inset:0; overflow:hidden; pointer-events:none; opacity:.55;}
+  .wickField svg{position:absolute; top:0; left:0; width:100%; height:100%;}
+
+  header.top{
+    display:flex; align-items:center; gap:10px; padding:16px 18px;
+    border-bottom:1px solid var(--line); position:relative; z-index:2;
+    background:linear-gradient(180deg, rgba(11,18,32,.95), rgba(11,18,32,.7));
+  }
+  header.top .logo{width:40px; height:40px; border-radius:10px; object-fit:cover; border:1px solid var(--gold);}
+  header.top .brandtext{line-height:1.2;}
+  header.top .brandtext .en{font-size:15px; font-weight:700; letter-spacing:.2px;}
+  header.top .brandtext .ta{font-size:11px; color:var(--gold-bright);}
+
+  /* HERO */
+  .hero{position:relative; padding:34px 20px 26px; z-index:2; text-align:center;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px; font-size:11.5px; letter-spacing:.6px;
+    color:var(--gold-bright); border:1px solid var(--gold); border-radius:20px; padding:5px 14px;
+    margin-bottom:16px; text-transform:uppercase;
+  }
+  .hero h1{font-family:'Poppins',sans-serif; font-weight:800; font-size:27px; line-height:1.28; color:#fff;}
+  .hero h1 span{color:var(--gold-bright);}
+  .hero .taLine{
+    font-family:'Noto Sans Tamil',sans-serif; font-weight:600; font-size:17px; color:var(--text);
+    margin-top:10px; line-height:1.6;
+  }
+  .hero .subEn{color:var(--muted); font-size:13.5px; margin-top:10px; line-height:1.6;}
+
+  .ctaBtn{
+    display:block; width:100%; text-align:center; padding:15px 18px; border-radius:12px;
+    font-family:'Poppins',sans-serif; font-weight:700; font-size:16px; color:#0B1220;
+    background:linear-gradient(135deg, var(--gold-bright), var(--gold));
+    box-shadow:0 10px 24px -8px rgba(212,175,106,.55);
+    border:none; cursor:pointer; position:relative;
+  }
+  .ctaBtn .ta{display:block; font-family:'Noto Sans Tamil',sans-serif; font-weight:600; font-size:12.5px; margin-top:2px; color:#1a2436;}
+  .ctaBtn:active{transform:scale(.98);}
+  .ctaWrap{margin-top:20px;}
+  .ctaWrap .microcopy{font-size:11px; color:var(--muted); margin-top:8px;}
+
+  /* 3-POINT SYSTEM SECTION */
+  .points{padding:8px 18px 30px; position:relative; z-index:2;}
+  .points h2{font-family:'Poppins',sans-serif; font-size:19px; text-align:center; color:#fff; margin-bottom:2px;}
+  .points h2 .ta{display:block; font-size:13px; color:var(--gold-bright); font-weight:600; margin-top:4px;}
+  .pointCards{margin-top:20px; display:flex; flex-direction:column; gap:12px;}
+  .pointCard{
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px;
+    display:flex; gap:14px; align-items:flex-start; position:relative; overflow:hidden;
+  }
+  .pointCard::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px;}
+  .pointCard.entry::before{background:var(--green);}
+  .pointCard.target::before{background:var(--gold);}
+  .pointCard.sl::before{background:var(--red);}
+  .pointMark{
+    width:38px; height:38px; min-width:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-family:'Poppins',sans-serif; font-weight:800; font-size:16px; background:var(--bg-alt); border:1px solid var(--line);
+  }
+  .entry .pointMark{color:var(--green); border-color:var(--green);}
+  .target .pointMark{color:var(--gold-bright); border-color:var(--gold);}
+  .sl .pointMark{color:var(--red); border-color:var(--red);}
+  .pointCard .txt .en{font-family:'Poppins',sans-serif; font-weight:700; font-size:14.5px; color:#fff;}
+  .pointCard .txt .ta{font-family:'Noto Sans Tamil',sans-serif; font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5;}
+
+  /* BENEFITS */
+  .benefits{padding:6px 18px 28px; position:relative; z-index:2;}
+  .benefits h2{font-family:'Poppins',sans-serif; font-size:19px; text-align:center; color:#fff;}
+  .benefits h2 .ta{display:block; font-size:13px; color:var(--gold-bright); font-weight:600; margin-top:4px;}
+  .benList{margin-top:18px; display:flex; flex-direction:column; gap:11px;}
+  .benItem{display:flex; gap:10px; align-items:flex-start; background:var(--bg-alt); border:1px solid var(--line); border-radius:12px; padding:12px 14px;}
+  .benItem .tick{width:20px; height:20px; min-width:20px; border-radius:50%; background:rgba(47,191,113,.15); color:var(--green); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; margin-top:1px;}
+  .benItem .en{font-size:13.5px; font-weight:600; color:#fff;}
+  .benItem .ta{font-family:'Noto Sans Tamil',sans-serif; font-size:12px; color:var(--muted); margin-top:2px;}
+
+  /* FINAL CTA */
+  .finalCta{padding:8px 18px 36px; position:relative; z-index:2; text-align:center;}
+  .finalCta .card{
+    background:radial-gradient(120% 140% at 50% 0%, rgba(212,175,106,.14), rgba(19,31,53,.9));
+    border:1px solid var(--gold); border-radius:18px; padding:26px 20px;
+  }
+  .finalCta h3{font-family:'Poppins',sans-serif; font-size:19px; color:#fff;}
+  .finalCta h3 .ta{display:block; font-family:'Noto Sans Tamil',sans-serif; font-size:14px; color:var(--gold-bright); margin-top:6px; font-weight:600;}
+  .finalCta p.small{font-size:12px; color:var(--muted); margin-top:10px;}
+
+  /* FOOTER */
+  footer{padding:22px 20px 30px; text-align:center; position:relative; z-index:2; border-top:1px solid var(--line);}
+  .agencyBlock{font-size:12px; color:var(--muted); line-height:1.7;}
+  .agencyBlock b{color:var(--text);}
+  .agencyBlock a{color:var(--gold-bright);}
+  .disclaimer{font-size:10.5px; color:#5C6479; margin-top:14px; line-height:1.6; padding:0 6px;}
+  .disclaimer .ta{display:block; margin-top:5px;}
+
+  @media (min-width:601px){
+    #page{box-shadow:0 0 60px rgba(0,0,0,.5);}
+  }
+</style>
+</head>
+<body>
+
+<div id="page">
+
+  <div class="wickField">
+    <svg viewBox="0 0 480 900" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#2FBF71" stroke-width="2" opacity="0.35">
+        <line x1="40" y1="60" x2="40" y2="130"/><rect x="33" y="80" width="14" height="35" fill="#2FBF71"/>
+        <line x1="90" y1="40" x2="90" y2="150"/><rect x="83" y="70" width="14" height="55" fill="#2FBF71"/>
+      </g>
+      <g stroke="#E5484D" stroke-width="2" opacity="0.30">
+        <line x1="140" y1="90" x2="140" y2="170"/><rect x="133" y="100" width="14" height="45" fill="#E5484D"/>
+      </g>
+      <g stroke="#D4AF6A" stroke-width="2" opacity="0.35">
+        <line x1="410" y1="700" x2="410" y2="800"/><rect x="403" y="730" width="14" height="40" fill="#D4AF6A"/>
+        <line x1="440" y1="680" x2="440" y2="790"/><rect x="433" y="700" width="14" height="55" fill="#D4AF6A"/>
+      </g>
+    </svg>
+  </div>
+
+  <header class="top">
+    <img class="logo" src="3pt.jpeg" alt="3 Point Traders logo">
+    <div class="brandtext">
+      <div class="en">3 Point Traders</div>
+      <div class="ta">தமிழில் டிரேடிங் கற்றல்</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Free Telegram Class · இலவச டெலிகிராம் வகுப்பு</div>
+    <h1>Lern with <span>3 Point Traders</span></h1>
+    <div class="taLine">சரியான Entry, Target &amp; Stop-Loss வைத்து சந்தையை புரிந்துகொள்ளுங்கள் — 3 பாயிண்ட் முறையில்.</div>
+    <div class="subEn">Simple 3-Point method to read any chart — Entry, Target &amp; Stop-Loss. Join our Telegram channel and start learning today.</div>
+
+    <div class="ctaWrap">
+      <a href="#" class="jnBtn ctaBtn" data-id="hero">
+        Join Now — Telegram
+        <span class="ta">இப்போதே டெலிகிராமில் சேரவும்</span>
+      </a>
+      <div class="microcopy">100% Free to join · இணைவது இலவசம்</div>
+    </div>
+  </section>
+
+  <section class="points">
+    <h2>The 3-Point Method<span class="ta">3 பாயிண்ட் முறை என்றால் என்ன?</span></h2>
+    <div class="pointCards">
+      <div class="pointCard entry">
+        <div class="pointMark">E</div>
+        <div class="txt">
+          <div class="en">Point 1 — Entry</div>
+          <div class="ta">சரியான நேரத்தில் market-ஐ எப்படி entry பண்றது என்று கற்றுக்கொள்வீர்கள்.</div>
+        </div>
+      </div>
+      <div class="pointCard target">
+        <div class="pointMark">T</div>
+        <div class="txt">
+          <div class="en">Point 2 — Target</div>
+          <div class="ta">Profit book பண்ண சரியான Target level-ஐ எப்படி வைப்பது என்பதை பார்ப்போம்.</div>
+        </div>
+      </div>
+      <div class="pointCard sl">
+        <div class="pointMark">SL</div>
+        <div class="txt">
+          <div class="en">Point 3 — Stop-Loss</div>
+          <div class="ta">Capital-ஐ பாதுகாக்க Stop-Loss எப்படி set பண்றது என்பதை practical-ஆ கற்போம்.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ctaWrap">
+      <a href="#" class="jnBtn ctaBtn" data-id="mid">
+        Join Now — Telegram
+        <span class="ta">இப்போதே டெலிகிராமில் சேரவும்</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="benefits">
+    <h2>Why Join Us<span class="ta">ஏன் எங்களுடன் சேர வேண்டும்?</span></h2>
+    <div class="benList">
+      <div class="benItem">
+        <div class="tick">✓</div>
+        <div>
+          <div class="en">Daily chart breakdowns in simple Tamil + English</div>
+          <div class="ta">தினமும் எளிய தமிழ் + ஆங்கிலத்தில் chart விளக்கம்</div>
+        </div>
+      </div>
+      <div class="benItem">
+        <div class="tick">✓</div>
+        <div>
+          <div class="en">Learn the same 3-Point method used by our community</div>
+          <div class="ta">எங்கள் community பயன்படுத்தும் 3 பாயிண்ட் முறையை கற்றுக்கொள்ளுங்கள்</div>
+        </div>
+      </div>
+      <div class="benItem">
+        <div class="tick">✓</div>
+        <div>
+          <div class="en">Beginner friendly — no prior experience needed</div>
+          <div class="ta">Beginners-க்கும் ஏற்றது — முந்தைய அனுபவம் தேவையில்லை</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="finalCta">
+    <div class="card">
+      <h3>Start Learning Today<span class="ta">இன்றே கற்க தொடங்குங்கள்</span></h3>
+      <div class="ctaWrap" style="margin-top:16px;">
+        <a href="#" class="jnBtn ctaBtn" data-id="final">
+          Join Now — Telegram
+          <span class="ta">இப்போதே டெலிகிராமில் சேரவும்</span>
+        </a>
+      </div>
+      <p class="small">Limited seats in the free batch · இலவச batch-ல் இடங்கள் குறைவு</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="agencyBlock">
+      <b>Advertised by: SRS Marketing Agency</b><br>
+      Telegram: <a href="https://t.me/srsagency" target="_blank" rel="noopener">t.me/srsagency</a>
+    </div>
+    <div class="disclaimer">
+      This Platform is only for educational purpose, not recommended any investment, trading or financial advice.
+      <span class="ta">இந்த தளம் கல்வி நோக்கத்திற்காக மட்டுமே, முதலீடு, டிரேடிங் அல்லது நிதி ஆலோசனையாக கருதப்படக்கூடாது.</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  /* =========================================================
+     META PIXEL — replace YOUR_PIXEL_ID_HERE with the real Pixel ID
+  ========================================================= */
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+
+  var PIXEL_ID = '1754860152419962';
+  fbq('init', 1754860152419962);
+  fbq('track', 'PageView');
+
+  /* =========================================================
+     TELEGRAM LINK — replace with the real channel/group link
+  ========================================================= */
+  var TELEGRAM_LINK = 'https://t.me/+l0uw2vE6-F5iZmI1';
+
+  var isNavigating = false;
+
+  window.addEventListener('DOMContentLoaded', function () {
+
+    /* ---- Wire up real Telegram href on every Join Now button ---- */
+    var buttons = document.querySelectorAll('.jnBtn');
+    buttons.forEach(function (btn) {
+      btn.href = TELEGRAM_LINK;
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (isNavigating) return;
+        isNavigating = true;
+
+        try {
+          if (typeof fbq === 'function') {
+            fbq('track', 'Lead', { value: 0, currency: 'INR' });
+          }
+        } catch (err) { /* fail silently, still redirect */ }
+
+        setTimeout(function () {
+          window.location.href = TELEGRAM_LINK;
+        }, 120);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
